@@ -3,7 +3,7 @@
 
     <head>
         <div th:replace="~{fragments/header :: head}"></div>
-        <title th:text="${pizza.nome}"></title>
+        <title th:text="|Pizza ${pizza.nome}|"></title>
     </head>
 
     <body>
@@ -48,14 +48,14 @@
                         Nuova Offerta
                     </a>
                 </div>
-                <table class="table" th:if="${pizza.offerte.size() > 0}">
+                <table class="table" th:if="${pizza.getOfferte().size() > 0}">
                     <thead>
                         <tr>
                             <th>
                                 Data inizio 
                             </th>
                             <th>
-                                Data  fine
+                                Data fine
                             </th>
                             <th>
                                 Titolo
@@ -66,7 +66,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="offerta : ${pizza.offerte}">
+                        <tr th:each="offerta : ${pizza.getOfferte()}">
                             <td th:text="${offerta.dataInizio}"></td>
                             <td th:text="${offerta.dataFine}"></td>
                             <td th:text="${offerta.titolo}"></td>
@@ -85,7 +85,7 @@
                     </tbody>
 
                 </table>
-                <div th:unless="${pizza.offerte.size() > 0}">
+                <div th:unless="${pizza.getOfferte().size() > 0}">
                     <div class="alert alter-primary">
                         Non esiste nessuna offerta per questa pizza!
                     </div>

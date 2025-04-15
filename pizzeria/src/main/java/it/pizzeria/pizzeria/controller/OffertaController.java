@@ -10,15 +10,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import it.pizzeria.pizzeria.model.Offerta;
-import it.pizzeria.pizzeria.model.Pizza;
 import it.pizzeria.pizzeria.repository.OffertaRepository;
-import it.pizzeria.pizzeria.repository.PizzaRepository;
 import jakarta.validation.Valid;
-
-
 
 
 @Controller
@@ -27,11 +22,11 @@ public class OffertaController {
 
     @Autowired
     private OffertaRepository repositoryOfferta;
-
+   
+    /*
     @Autowired
     private PizzaRepository pizzaRepo;
   
-
     @GetMapping("/create")
     public String create(@RequestParam Integer pizzaId, Model model) {
         Offerta offerta = new Offerta();
@@ -40,13 +35,13 @@ public class OffertaController {
         model.addAttribute("offerta", offerta);
         return "offerte/edit";
     }
+    */
 
 
     @PostMapping("/create")
-    public String store(
-        @Valid @ModelAttribute("offerta") Offerta formOfferta,
-        BindingResult bindingResult,
-        Model model) {
+    public String store(@Valid @ModelAttribute("offerta") Offerta formOfferta,
+                         BindingResult bindingResult,
+                         Model model) {
     
            /*  if(formBorrow.getPizzaEl().getNumCopy() <= 0) {
                 bindingResult.addError(new ObjectError("note", 
@@ -63,9 +58,9 @@ public class OffertaController {
                 model.addAttribute("offerta", formOfferta);
                 return "/offerte/edit";
             }
-              repositoryOfferta.save(formOfferta);
+            repositoryOfferta.save(formOfferta);
 
-        return "redirect:/pizze/show/" + formOfferta.getPizzaEl().getId();
+            return "redirect:/pizze/show/" + formOfferta.getPizzaEl().getId();
     }
     
     @GetMapping("/edit/{id}")
@@ -77,26 +72,20 @@ public class OffertaController {
     }
 
     @PostMapping("/edit/{id}")
-    public String update(@PathVariable Integer id,
-    @Valid @ModelAttribute("offerta") Offerta offerta,
-    BindingResult bindingResult, 
-    Model model) {
+    public String update(@Valid @ModelAttribute("offerta") Offerta offerta,
+                          BindingResult bindingResult, 
+                          Model model) {
 
         if(bindingResult.hasErrors()) {
             model.addAttribute("editMode", true);
+            model.addAttribute("offerta", offerta);
             return "/offerte/edit";
         }
-
-         // Verifica che l'offerta esista (anche se hai già l'oggetto, buona pratica)
-          repositoryOfferta.findById(id) .orElseThrow(() -> new IllegalArgumentException("Offerta con ID " + id + " non trovata"));
-
-         // Imposta l'ID manualmente per sicurezza (in caso di manomissioni lato client)
-         offerta.setId(id);
 
          repositoryOfferta.save(offerta);
 
         // Redirect alla pagina della pizza collegata
-        return "redirect:/pizze/" + offerta.getPizzaEl().getId();
+        return "redirect:/pizze/show/" + offerta.getPizzaEl().getId();
     }
     
 }

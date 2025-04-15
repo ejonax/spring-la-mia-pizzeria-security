@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import it.pizzeria.pizzeria.model.Offerta;
 import it.pizzeria.pizzeria.model.Pizza;
 import it.pizzeria.pizzeria.repository.PizzaRepository;
 import jakarta.validation.Valid;
@@ -168,12 +169,23 @@ public class PizzaController {
      @PostMapping("/delete/{id}")
      public String delete(@PathVariable("id") Integer id) {
  
-         Pizza pizza = pizzaRepository.findById(id).get();
+        // Pizza pizza = pizzaRepository.findById(id).get();
         
          pizzaRepository.deleteById(id);
- 
          return "redirect:/pizze";
      }
 
       /* END delete session */
+
+      /* create form per una nuova offerta quando siamo dentro il pizza/show */
+      @GetMapping("/{id}/offerta")
+      public String offerta(@PathVariable Integer id, Model model) {
+          Offerta offerta = new Offerta();
+          offerta.setPizzaEl(pizzaRepository.findById(id).get());
+        
+  
+          model.addAttribute("offerta", offerta);
+          model.addAttribute("editMode", false);
+          return "/offerte/edit";
+      }
 }
