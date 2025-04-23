@@ -71,12 +71,17 @@
                                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                               </svg> Cancel</a>
                         </div>
-
+                      </div>
                     </div>
+                    <div class="col-4">
+                        <h4>Ingredienti</h4>
+                        <div class="form-check" th:each="ing : ${ingredientiList}">
+                            <input class="form-check-input" type="checkbox" th:id="${ing.id}" th:value="${ing.id}" th:field="*{ingredienti}"> 
+                            <label class="form-check-label" th:for="${ing.id}" th:text="${ing.ingrediente}"></label>
+                        </div>
+                     </div>
                 </div>
-          </form>
-
-
+            </form>
          </div>
 
         <div th:replace="~{fragments/header :: bootstrapScript}"></div>

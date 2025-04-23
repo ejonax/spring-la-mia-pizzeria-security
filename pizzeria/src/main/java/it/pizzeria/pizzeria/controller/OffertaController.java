@@ -42,16 +42,6 @@ public class OffertaController {
     public String store(@Valid @ModelAttribute("offerta") Offerta formOfferta,
                          BindingResult bindingResult,
                          Model model) {
-    
-           /*  if(formBorrow.getPizzaEl().getNumCopy() <= 0) {
-                bindingResult.addError(new ObjectError("note", 
-                "Cannot borrow thie book because there aren't enough copy"));
-            }
-        
-            int numCopy = formBorrow.getBook().getNumCopy();
-
-            formBorrow.getBook().setNumCopy(--numCopy);
-              */
 
             if(bindingResult.hasErrors()) {
                 model.addAttribute("editMode", false);

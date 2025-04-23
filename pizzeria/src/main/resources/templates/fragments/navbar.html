@@ -19,6 +19,10 @@
                         <a class="nav-link" th:classAppend="${current == 'pizze'} ? active : not-active" 
                         aria-current="page" th:href="@{/pizze}">Pizze</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classAppend="${current == 'ingredienti'} ? active : not-active" 
+                        aria-current="page" th:href="@{/ingredienti}">Ingredienti</a>
+                    </li>
                 </ul>
             </div>
         </div>

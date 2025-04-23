@@ -7,6 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -16,7 +19,7 @@ public class Pizza {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(unique=true,nullable=false)
    // @NotBlank(message = "Il nome è obbligatorio")
@@ -35,12 +38,20 @@ public class Pizza {
     @OneToMany(mappedBy="pizzaEl")
     private List<Offerta> offerteList;
 
-    public Integer getId() {
+    @ManyToMany()
+    @JoinTable(
+            name = "pizza_ingredienti",
+            joinColumns = @JoinColumn(name = "pizza_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingrediente_id")
+    )
+    private List<Ingredienti> ingredienti;
+
+    public Long getId() {
         return id;
     }
 
     /*  id è PK ed autoincrement, non si deve set up-are */
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
     
@@ -85,6 +96,14 @@ public class Pizza {
 
     public void setOfferte(List<Offerta> offerte) {
         this.offerteList = offerte;
+    }
+
+    public List<Ingredienti> getIngredienti() {
+        return ingredienti;
+    }
+
+    public void setIngredienti(List<Ingredienti> ingredienti) {
+        this.ingredienti = ingredienti;
     }
 
 }
