@@ -50,7 +50,7 @@
                             </div>
     
                             <div class="col-12">
-                                <label class="form-label">Prezzo in uero</label>
+                                <label class="form-label">Prezzo in euro</label>
                                 <input type="text" class="form-control" id="prezzo" th:field="*{prezzo}"
                                     th:errorClass="is-invalid">
                                     
@@ -65,6 +65,14 @@
                             </div>
 
                         </div>
+                    </div>
+                    <!-- ingredienti -->
+                    <div class="col-4">
+                       <h4>Ingredienti</h4>
+                       <div class="form-check" th:each="ing : ${ingredientiList}">
+                          <input class="form-check-input" type="checkbox" th:id="${ing.id}" th:value="${ing.id}" th:field="*{ingredienti}"> 
+                          <label class="form-check-label" th:for="${ing.id}" th:text="${ing.ingrediente}"></label>
+                       </div>
                     </div>
                 </div>
             </form>
