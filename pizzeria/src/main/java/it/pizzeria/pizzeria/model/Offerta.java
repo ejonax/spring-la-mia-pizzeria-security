@@ -4,13 +4,13 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 
 
 @Entity
@@ -20,10 +20,11 @@ public class Offerta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
+    @NotNull(message = "La data di inizio è obbligatoria")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataInizio;
 
+    @NotNull(message = "La data di di fine è obbligatoria")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataFine;
 

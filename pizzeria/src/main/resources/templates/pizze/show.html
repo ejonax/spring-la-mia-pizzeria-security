@@ -12,9 +12,12 @@
     <main class="flex-grow-1">
         <div class="container py-4" th:object="${pizza}">
             <h1 class="text-center my-4">La pizza scelta</h1>
-            <hr />
-            <div class="row">
-                <div class="col-8">
+
+            <div class="row justify-content-center">
+                <!-- Le info per la pizza selezionata -->
+                <div class="col-md-6 col-lg-5">
+                    <h3>Info sulla pizza</h3>
+                    <hr>
                     <dl>
                         <dt>Nome pizza</dt>
                         <dd th:text="*{nome}"></dd>
@@ -28,17 +31,56 @@
                         <dd th:text="|*{prezzo} €|"></dd>
                     </dl>
                 </div>
-
-                <div class="col-4">
+                <!-- Li ingredienti della pizza selezionata -->
+                <div class="col-md-6 col-lg-5">
                     <h3>Ingredienti</h3>
-                    <ul>
-                        <li th:each="ing : *{ingredienti}" th:text="${ing.ingrediente}"></li>
-                    </ul>
+                    <hr>
+                    <ol class="list-group list-group-numbered">
+                        <li th:each="ing : *{ingredienti}" 
+                            th:text="${ing.ingrediente}">
+                        </li>
+                    </ol>
                 </div>
+                
             </div>
-            <div class="row">
-                <div class="col-12">
-                    <h2>Offerte</h2>
+            
+            <!-- Row delle Offerte -->
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <h1 class="text-center my-4">Offerte</h1>
+                    <div class="mb-2">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-bordered align-middle" 
+                                   th:if="${pizza.getOfferte().size() > 0}">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="text-center">Data inizio</th>
+                                        <th class="text-center">Data fine</th>
+                                        <th class="text-start">Titolo</th>
+                                        <th class="text-center">Stato</th>
+                                        <th class="text-center">Azioni</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="offerta : ${pizza.getOfferte()}">
+                                        <td class="text-center" th:text="${offerta.dataInizio != null ? offerta.dataInizio.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy')) : '—'}"></td>
+                                        <td class="text-center" th:text="${offerta.dataFine != null ? offerta.dataFine.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy')) : '—'}"></td>
+                                        <td th:text="${offerta.titolo}"></td>
+                                        <td class="text-center">
+                                           <span th:if="${offerta.dataFine >= T(java.time.LocalDate).now()}" class="badge bg-success">Attiva</span>
+                                           <span th:if="${offerta.dataFine < T(java.time.LocalDate).now()}" class="badge bg-warning text-dark">Scaduta</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <a class="btn btn-sm btn-outline-primary" th:href="@{|/offerte/edit/${offerta.id}|}" title="Modifica offerta">
+                                                <i class="bi bi-pencil-fill fs-5 me-1"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
                     <div class="mb-2">
                         <!-- Creazione di una nuova offerta id=${pizza.id}-->
                         <a class="btn btn-success" th:href="@{|/pizze/${pizza.id}/offerta|}">
@@ -54,43 +96,6 @@
                             Nuova Offerta
                         </a>
                     </div>
-                    <table class="table" th:if="${pizza.getOfferte().size() > 0}">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Data inizio 
-                                </th>
-                                <th>
-                                    Data fine
-                                </th>
-                                <th>
-                                    Titolo
-                                </th>
-                                <th>
-                                    <!-- Colonna per la modifica -->
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="offerta : ${pizza.getOfferte()}">
-                                <td th:text="${offerta.dataInizio}"></td>
-                                <td th:text="${offerta.dataFine}"></td>
-                                <td th:text="${offerta.titolo}"></td>
-                                <td>
-                                    <a class="btn btn-primary" th:href="@{|/offerte/edit/${offerta.id}|}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                            <path
-                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                            <path fill-rule="evenodd"
-                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                                        </svg>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-
-                    </table>
                     <div th:unless="${pizza.getOfferte().size() > 0}">
                         <div class="alert alter-primary">
                             Non esiste nessuna offerta per questa pizza!
