@@ -1,19 +1,18 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 
-    <head>
-        <div th:replace="~{fragments/header :: head}"></div>
-        <title th:text="|Pizza ${pizza.nome}|"></title>
-    </head>
+<head>
+    <div th:replace="~{fragments/commonHF :: myHeader}"></div>
+    <title th:text="|Pizza ${pizza.nome}|"></title>
+</head>
 
-    <body>
-        <nav th:replace="~{fragments/navbar :: navbar('pizze')}"></nav>
+<body class="d-flex flex-column min-vh-100">
+    <nav th:replace="~{fragments/navbar :: navbar('pizze')}"></nav>
 
-        <div class="container" th:object="${pizza}">
-            
-            <h1>La pizza scelta</h1>
-            <hr>
-
+    <main class="flex-grow-1">
+        <div class="container py-4" th:object="${pizza}">
+            <h1 class="text-center my-4">La pizza scelta</h1>
+            <hr />
             <div class="row">
                 <div class="col-8">
                     <dl>
@@ -36,72 +35,72 @@
                         <li th:each="ing : *{ingredienti}" th:text="${ing.ingrediente}"></li>
                     </ul>
                 </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <h2>Offerte</h2>
+                    <div class="mb-2">
+                        <!-- Creazione di una nuova offerta id=${pizza.id}-->
+                        <a class="btn btn-success" th:href="@{|/pizze/${pizza.id}/offerta|}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-journal-plus" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5" />
+                                <path
+                                    d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
+                                <path
+                                    d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
+                            </svg>
+                            Nuova Offerta
+                        </a>
+                    </div>
+                    <table class="table" th:if="${pizza.getOfferte().size() > 0}">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Data inizio 
+                                </th>
+                                <th>
+                                    Data fine
+                                </th>
+                                <th>
+                                    Titolo
+                                </th>
+                                <th>
+                                    <!-- Colonna per la modifica -->
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="offerta : ${pizza.getOfferte()}">
+                                <td th:text="${offerta.dataInizio}"></td>
+                                <td th:text="${offerta.dataFine}"></td>
+                                <td th:text="${offerta.titolo}"></td>
+                                <td>
+                                    <a class="btn btn-primary" th:href="@{|/offerte/edit/${offerta.id}|}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path
+                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                            <path fill-rule="evenodd"
+                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                        </svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
 
-        <div class="row">
-            <div class="col-12">
-                <h2>Offerte</h2>
-                <div class="mb-2">
-                    <!-- Creazione di una nuova offerta id=${pizza.id}-->
-                    <a class="btn btn-success" th:href="@{|/pizze/${pizza.id}/offerta|}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-journal-plus" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5" />
-                            <path
-                                d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
-                            <path
-                                d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
-                        </svg>
-                        Nuova Offerta
-                    </a>
-                </div>
-                <table class="table" th:if="${pizza.getOfferte().size() > 0}">
-                    <thead>
-                        <tr>
-                            <th>
-                                Data inizio 
-                            </th>
-                            <th>
-                                Data fine
-                            </th>
-                            <th>
-                                Titolo
-                            </th>
-                            <th>
-                                <!-- Colonna per la modifica -->
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="offerta : ${pizza.getOfferte()}">
-                            <td th:text="${offerta.dataInizio}"></td>
-                            <td th:text="${offerta.dataFine}"></td>
-                            <td th:text="${offerta.titolo}"></td>
-                            <td>
-                                <a class="btn btn-primary" th:href="@{|/offerte/edit/${offerta.id}|}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                        <path
-                                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                        <path fill-rule="evenodd"
-                                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                                    </svg>
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-
-                </table>
-                <div th:unless="${pizza.getOfferte().size() > 0}">
-                    <div class="alert alter-primary">
-                        Non esiste nessuna offerta per questa pizza!
+                    </table>
+                    <div th:unless="${pizza.getOfferte().size() > 0}">
+                        <div class="alert alter-primary">
+                            Non esiste nessuna offerta per questa pizza!
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+   </main>
 
-        <div th:replace="~{fragments/header :: bootstrapScript}"></div>
-        </body>
-    </html>
+<div th:insert="~{fragments/commonHF :: myFooter}"></div>
+</body>
+</html>
