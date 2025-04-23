@@ -7,59 +7,61 @@
     <title>Ingredienti</title>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <nav th:replace="~{fragments/navbar :: navbar('ingredienti')}"></nav>
-
-    <div class="container">
-        <h1 class="text-center my-4">Ingredienti</h1>
-
-        <div class="row justify-content-center">
-            <!-- FORM -->
-            <div class="col-md-6 col-lg-5">
-                <form id="ingrediente-form" 
-                      th:object="${ingredienteObj}" 
-                      th:action="@{/ingredienti/create}" 
-                      method="post"
-                      class="p-4 rounded shadow bg-light">
-                    <div class="input-group mb-3">
-                        <input id="ingrediente" 
-                               th:field="*{ingrediente}" 
-                               type="text" 
-                               class="form-control" 
-                               placeholder="Inserisci un ingrediente...">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="bi bi-plus-lg"></i> Aggiungi
-                        </button>
-                    </div>
-                   
-                    <ul>
-                        <li th:each="err : ${#fields.allErrors()}" th:text="${err}" class="text-danger"></li>
-                    </ul>
-                </form>
-                
-                <!-- RISULTATI -->
-                <!-- i records che si leggono sul DB -->
-                <ul class="list-group mt-4" th:if="${list.size() > 0}">
-                    <li class="list-group-item d-flex justify-content-between align-items-center" th:each="item : ${list}">
-                        <span th:text="${item.ingrediente}"></span>
-                        <form th:action="@{|/ingredienti/delete/${item.id}|}" 
-                              method="post" 
-                              onsubmit="return confirm('Sei sicuro di voler eliminare questo ingrediente?')">
-                            <button class="btn btn-sm btn-danger" type="submit">
-                                <i class="bi bi-trash3"></i>
-                            </button>
-                        </form>
-                    </li>
-                </ul>
     
+    <main class="flex-grow-1">
+        <div class="container py-4">
+            <h1 class="text-center my-4">Ingredienti</h1>
 
-                <div class="alert alert-warning text-center mt-4" role="alert" th:unless="${list.size() > 0}">
-                    Non ci sono ingredienti inseriti nella database.
+            <div class="row justify-content-center">
+                <!-- FORM -->
+                <div class="col-md-6 col-lg-5">
+                    <form id="ingrediente-form" 
+                        th:object="${ingredienteObj}" 
+                        th:action="@{/ingredienti/create}" 
+                        method="post"
+                        class="p-4 rounded shadow bg-light">
+                        <div class="input-group mb-3">
+                            <input id="ingrediente" 
+                                th:field="*{ingrediente}" 
+                                type="text" 
+                                class="form-control" 
+                                placeholder="Inserisci un ingrediente...">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-plus-lg"></i> Aggiungi
+                            </button>
+                        </div>
+                    
+                        <ul>
+                            <li th:each="err : ${#fields.allErrors()}" th:text="${err}" class="text-danger"></li>
+                        </ul>
+                    </form>
+                    
+                    <!-- RISULTATI -->
+                    <!-- i records che si leggono sul DB -->
+                    <ul class="list-group mt-4" th:if="${list.size() > 0}">
+                        <li class="list-group-item d-flex justify-content-between align-items-center" th:each="item : ${list}">
+                            <span th:text="${item.ingrediente}"></span>
+                            <form th:action="@{|/ingredienti/delete/${item.id}|}" 
+                                method="post" 
+                                onsubmit="return confirm('Sei sicuro di voler eliminare questo ingrediente?')">
+                                <button class="btn btn-sm btn-danger" type="submit">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+        
+
+                    <div class="alert alert-warning text-center mt-4" role="alert" th:unless="${list.size() > 0}">
+                        Non ci sono ingredienti inseriti nella database.
+                    </div>
                 </div>
-            </div>
 
+            </div>
         </div>
-    </div>
+    </main>
 
     <div th:insert="~{fragments/commonHF :: myFooter}"></div>
 </body>
