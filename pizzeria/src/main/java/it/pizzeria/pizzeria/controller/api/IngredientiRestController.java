@@ -11,49 +11,45 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import it.pizzeria.pizzeria.model.Pizza;
-import it.pizzeria.pizzeria.service.PizzaService;
+import it.pizzeria.pizzeria.model.Ingredienti;
+import it.pizzeria.pizzeria.service.IngredienteService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/pizze")
-public class PizzaRestController {
+@RequestMapping("/api/ingredienti")
+public class IngredientiRestController {
 
     @Autowired
-    private PizzaService pizzaService;
+    private IngredienteService ingredienteServiceService;
 
     @GetMapping
-    public List<Pizza> getAllPizze(@RequestParam(name="keyword", required=false) String param) {
-        if(param !=null){
-            return pizzaService.findPizzaList(param);
-        }
-        return pizzaService.findAllPizza();
+    public List<Ingredienti> getAllIngredienti() {
+        return ingredienteServiceService.findAllIngredienti();
     }
-    
-    @GetMapping("{id}")
-    public Pizza getPizzaByID(@PathVariable Long id) {
-        Pizza pizza = pizzaService.findPizzaById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        return pizza;
+    @GetMapping("{id}")
+    public Ingredienti getIngredientiByID(@PathVariable Long id) {
+        Ingredienti ingredienti = ingredienteServiceService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return ingredienti;
     }
-    
+
     @PostMapping
-    public Pizza create(@Valid @RequestBody Pizza pizza) {
-        return pizzaService.create(pizza);
+    public Ingredienti Ingredienti(@Valid @RequestBody Ingredienti ingredienti) {
+        return ingredienteServiceService.create(ingredienti);
     }
 
     @PutMapping("/{id}")
-    public Pizza put(@PathVariable Long id, @RequestBody Pizza pizza) {
-       return pizzaService.update(pizza);
+    public Ingredienti put(@PathVariable Long id, @RequestBody Ingredienti ingredienti) {
+       return ingredienteServiceService.update(ingredienti);
     }
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable Long id){
-        pizzaService.deleteById(id);
+        ingredienteServiceService.deleteById(id);
     }
 
 }

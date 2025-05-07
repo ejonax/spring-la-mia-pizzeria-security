@@ -28,6 +28,10 @@ public class IngredienteService {
         return ingredientiRepository.save(ingredienti);
     }
 
+    public Ingredienti update(Ingredienti ingredienti){
+        return ingredientiRepository.save(ingredienti);
+    }
+
     public void deleteById(Long id){
 
         Ingredienti ing=ingredientiRepository.findById(id).get();
