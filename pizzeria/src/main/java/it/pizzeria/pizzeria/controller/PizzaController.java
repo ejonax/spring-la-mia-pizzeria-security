@@ -1,6 +1,5 @@
 package it.pizzeria.pizzeria.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +12,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.pizzeria.pizzeria.model.Offerta;
 import it.pizzeria.pizzeria.model.Pizza;
-import it.pizzeria.pizzeria.repository.IngredientiRepository;
-import it.pizzeria.pizzeria.repository.PizzaRepository;
+import it.pizzeria.pizzeria.service.IngredienteService;
+import it.pizzeria.pizzeria.service.PizzaService;
 import jakarta.validation.Valid;
 
 @Controller
@@ -26,30 +26,29 @@ import jakarta.validation.Valid;
 public class PizzaController {
 
    @Autowired
-   private PizzaRepository pizzaRepository;
+   private PizzaService pizzaService;
+
    @Autowired
-   private IngredientiRepository ingredientiRepository;
-
-   
-   public PizzaController(PizzaRepository pizzaRepository){
-       this.pizzaRepository=pizzaRepository;
-
-   }
+   private IngredienteService ingredientiService;
 
     @GetMapping
-    public String index(Model model) {
-        List<Pizza> result=pizzaRepository.findAll();
-        model.addAttribute("listaPizze",result);
-
+    public String index(Model model, @RequestParam(name = "keyword", required = false) String nome) {
+        model.addAttribute("listaPizze",pizzaService.findPizzaList(nome));
         return "pizze/index";
     }
     
 
     @GetMapping("/show/{id}")
     public String show(@PathVariable("id") Long id, Model model) {
-        Optional<Pizza> optPizza = pizzaRepository.findById(id);
+        Optional<Pizza> optPizza = pizzaService.findPizzaById(id);
+
+        if (optPizza==null) {
+            model.addAttribute("errorMessage","errore: id non valido");
+            return "error";
+        }
+
         if (optPizza.isPresent()) {
-            model.addAttribute("pizza", pizzaRepository.findById(id).get());
+            model.addAttribute("pizza", optPizza.get());
             return "/pizze/show";
         }
 
@@ -62,12 +61,11 @@ public class PizzaController {
     }
 
     /* START edit session */
-
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, Model model) {
 
-        model.addAttribute("pizza", pizzaRepository.findById(id).get());
-        model.addAttribute("ingredientiList", ingredientiRepository.findAll());
+        model.addAttribute("pizza", pizzaService.findPizzaById(id).get());
+        model.addAttribute("ingredientiList", ingredientiService.findAllIngredienti());
         return "/pizze/edit";
     }
 
@@ -77,7 +75,7 @@ public class PizzaController {
             BindingResult bindingResult,
             Model model) {
        
-        Optional<Pizza> optPizza = pizzaRepository.findById(formPizza.getId());
+        Optional<Pizza> optPizza = pizzaService.findPizzaById(formPizza.getId());
 
         if (optPizza.isPresent()) {
 
@@ -108,18 +106,16 @@ public class PizzaController {
         if (bindingResult.hasErrors()) {
             return "/pizze/edit";
         }
-        pizzaRepository.save(formPizza);
+        pizzaService.create(formPizza);
 
         return "redirect:/pizze";
     }
-
-    /* END edit session */
 
     /* START create session */
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("pizza", new Pizza());
-        model.addAttribute("ingredientiList", ingredientiRepository.findAll());
+        model.addAttribute("ingredientiList", ingredientiService.findAllIngredienti());
         return "/pizze/create";
     }
 
@@ -135,10 +131,13 @@ public class PizzaController {
             bindingResult.rejectValue("nome", "invalid", "Bisognerebbe che inserisci il nome della pizza!");
         }
 
-        if (pizzaRepository.existsByNome(formPizza.getNome()))
+        
+        /* il nome della pizza esiste già nella nostra lista di pizze */
+        if (!pizzaService.findPizzaList(formPizza.getNome()).isEmpty())
         {
             bindingResult.rejectValue("nome", "duplicate", "Questa pizza esiste già, cambi il nome");
         }
+        
 
          /* prezzo non è <=0 */
          if (formPizza.getPrezzo() == null || formPizza.getPrezzo() <= 0) {
@@ -159,11 +158,11 @@ public class PizzaController {
         }
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("ingredientiList", ingredientiRepository.findAll());
+            model.addAttribute("ingredientiList", ingredientiService.findAllIngredienti());
             return "/pizze/create";
         }
     
-        pizzaRepository.save(formPizza);
+        pizzaService.create(formPizza);
         redirectAttributes.addFlashAttribute("successMessage", "Nuova pizza creata!");
         return "redirect:/pizze";
 
@@ -177,7 +176,7 @@ public class PizzaController {
      public String delete(@PathVariable("id") Long id) {
  
         // Pizza pizza = pizzaRepository.findById(id).get();
-        pizzaRepository.deleteById(id);
+        pizzaService.deleteById(id);
         return "redirect:/pizze";
      }
 
@@ -187,7 +186,7 @@ public class PizzaController {
       @GetMapping("/{id}/offerta")
       public String offerta(@PathVariable Long id, Model model) {
           Offerta offerta = new Offerta();
-          offerta.setPizzaEl(pizzaRepository.findById(id).get());
+          offerta.setPizzaEl(pizzaService.findPizzaById(id).get());
         
   
           model.addAttribute("offerta", offerta);

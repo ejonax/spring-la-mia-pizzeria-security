@@ -54,7 +54,7 @@ public class OffertaController {
     }
     
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable Integer id, Model model) {
+    public String edit(@PathVariable Long id, Model model) {
         Offerta offertaEl=repositoryOfferta.findById(id).get();
         model.addAttribute("offerta", offertaEl);
         model.addAttribute("editMode", true);

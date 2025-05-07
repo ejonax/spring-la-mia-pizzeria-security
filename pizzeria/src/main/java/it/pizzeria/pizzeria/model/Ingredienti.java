@@ -49,6 +49,4 @@ public class Ingredienti {
    public void setPizze(List<Pizza> pizze) {
     this.pizze = pizze;
    }
-
-   
 }
