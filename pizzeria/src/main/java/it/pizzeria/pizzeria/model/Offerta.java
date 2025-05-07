@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,6 +34,7 @@ public class Offerta {
     
     @ManyToOne
     @JoinColumn(name = "pizza_ID", nullable = false)
+    @JsonBackReference /* per non avere la ricursione durante le restAPI*/
     private Pizza pizzaEl;
 
     public Long getId() {
