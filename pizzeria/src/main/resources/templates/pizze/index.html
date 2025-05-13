@@ -36,11 +36,18 @@
                     </form>
                 </div>
 
+            <!--Se non esiste nessuna pizza in DB-->
             <div th:if="${listaPizze.isEmpty()}">
                 <h3 >Lista delle pizze</h3>
                 <p> Spiacente, oggi nessuna pizza nel nostro menu</p>
             </div>
 
+            <!--Mettiamo il user che è logg-ato-->
+            <!--
+              <span th:text="|Ciao ${username}|"></span>
+            -->
+           
+            <!--Solo se esistono delle pizze in DB-->
             <div th:unless="${listaPizze.isEmpty()}" class="container">
                 <h3 class="my-4 d-flex align-items-center">
                     <i class="bi bi-list-stars"></i>
@@ -54,6 +61,15 @@
                         <th>Ingredienti</th>
                         <th>Foto</th>
                         <th>Prezzo Euro</th>
+                        <th>
+                            <!-- spazio per il dettaglio-->
+                        </th>
+                        <th sec:authorize="hasAuthority('ADMIN')">
+                            <!-- spazio per la modifica-->
+                        </th>
+                        <th sec:authorize="hasAuthority('ADMIN')">
+                            <!-- spazio per la cancellazione-->
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -72,12 +88,12 @@
                                     <i class="bi bi-book"></i>
                                 </a>
                             </td>
-                            <td>
+                            <td sec:authorize="hasAuthority('ADMIN')">
                                 <a class="btn btn-primary" th:href="@{|/pizze/edit/${pizzaElemento.id}|}">
                                     <i class="bi bi-pencil-fill"></i>
                                 </a>
                             </td>
-                            <td>
+                            <td sec:authorize="hasAuthority('ADMIN')">
                                 <form action="#" th:action="@{'/pizze/delete/{id}'(id=${pizzaElemento.id})}" method="post">
                                     <button class="btn btn-danger" type="submit" id="submitButton" onclick="return confirm('Sei sicuro?')">
                                         <i class="bi bi-trash"></i>

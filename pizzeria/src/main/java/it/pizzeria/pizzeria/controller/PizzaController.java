@@ -3,6 +3,7 @@ package it.pizzeria.pizzeria.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,8 +33,9 @@ public class PizzaController {
    private IngredienteService ingredientiService;
 
     @GetMapping
-    public String index(Model model, @RequestParam(name = "keyword", required = false) String nome) {
+    public String index(Authentication authentication,Model model, @RequestParam(name = "keyword", required = false) String nome) {
         model.addAttribute("listaPizze",pizzaService.findPizzaList(nome));
+        model.addAttribute("username", authentication.getName());
         return "pizze/index";
     }
     

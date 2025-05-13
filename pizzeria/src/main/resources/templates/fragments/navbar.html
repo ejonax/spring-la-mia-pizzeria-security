@@ -19,12 +19,20 @@
                         <a class="nav-link" th:classAppend="${current == 'pizze'} ? active : not-active" 
                         aria-current="page" th:href="@{/pizze}">Pizze</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
                         <a class="nav-link" th:classAppend="${current == 'ingredienti'} ? active : not-active" 
                         aria-current="page" th:href="@{/ingredienti}">Ingredienti</a>
                     </li>
                 </ul>
             </div>
+
+            <div class="text-light">
+                Benvenuto:<span class="text-uppercase" th:text="${#authentication.name}"></span>
+                   Ruolo: <span th:each="role : ${#authentication.authorities}" th:text="${role.authority}"></span>
+                
+                <a class="btn btn-primary" href="/logout"> LOGOUT </a>
+            </div>
+            
         </div>
     </nav>
 
