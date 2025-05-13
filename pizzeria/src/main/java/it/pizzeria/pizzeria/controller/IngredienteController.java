@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.pizzeria.pizzeria.model.Ingredienti;
 import it.pizzeria.pizzeria.service.IngredienteService;
@@ -39,12 +40,19 @@ public class IngredienteController {
 
     @PostMapping("/create")
     public String store(@Valid @ModelAttribute("ingredienteObj") Ingredienti ingredienti,
-            BindingResult bindingResult) {
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
 
-        if (!bindingResult.hasErrors()) {
-            ingredienteService.create(ingredienti);
-        }
-        return "redirect:/ingredienti";
+                if (!bindingResult.hasErrors()) {
+                    if (ingredienteService.existsByNome(ingredienti.getIngrediente())) {
+                        redirectAttributes.addFlashAttribute( "erroreIngrediente", "L'ingrediente \"" + ingredienti.getIngrediente() + "\" esiste già e non può essere aggiunto di nuovo.");
+                        return "redirect:/ingredienti";
+                    }
+            
+                    ingredienteService.create(ingredienti);
+                }
+            
+                return "redirect:/ingredienti";
     }
 
     @PostMapping("/delete/{id}")

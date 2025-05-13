@@ -24,6 +24,10 @@ public class IngredienteService {
         return ingredientiRepository.findById(id);
     }
 
+    public boolean existsByNome(String ingrediente) {
+        return ingredientiRepository.findByIngredienteIgnoreCase(ingrediente).isPresent();
+    }
+
     public Ingredienti create(Ingredienti ingredienti){
         return ingredientiRepository.save(ingredienti);
     }

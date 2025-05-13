@@ -14,7 +14,11 @@
         <div class="container py-4">
             <h1 class="text-center my-4">Ingredienti</h1>
 
-            <div class="row justify-content-center">
+                <div class="row justify-content-center">
+                    <!-- errore se ingrediente nuovo esiste gia nella lista degli ingredienti -->
+                   <div th:if="${erroreIngrediente}" class="alert alert-danger">
+                        <p th:text="${erroreIngrediente}"></p>
+                </div>
                 <!-- FORM -->
                 <div class="col-md-6 col-lg-5">
                     <form id="ingrediente-form" 
@@ -36,6 +40,7 @@
                         <ul>
                             <li th:each="err : ${#fields.allErrors()}" th:text="${err}" class="text-danger"></li>
                         </ul>
+                        
                     </form>
                     
                     <!-- RISULTATI -->
